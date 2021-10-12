@@ -482,7 +482,7 @@
 
 <body>
     <input type="button" onclick='ClarityCollect()' value="Load Data from Clarity">
-    &nbsp Or, &nbsp Read Existing Log File:
+    &nbsp; Or, &nbsp; Read Existing Log File:
     <input type="file" onchange='readELM(this)'>
     ==>
     <input type="button" onclick='ReportGen()' value="Generate Report">
