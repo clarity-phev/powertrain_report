@@ -406,7 +406,10 @@
                 Bmax = Math.max(Bmax, BCells[n]);
                 Bavg += BCells[n];
             }
+            var MaxMax = 0, MinMin = 0 ;
             Bavg = Bavg / 84.0;
+            MaxMax = Math.max(Amax, Bmax);       // Find the max of A and B
+            MinMin = Math.min(Amin, Bmin);       // Find the min of A and B
 
             // Show the Cell Statistics
             AllPrnt += '<table style="width:60%">';
@@ -468,8 +471,8 @@
             });
 
             //change the scale in accordance with the data
-            myChart.config.options.scales.yAxes[0].ticks.min = ABAvg - 5;
-            myChart.config.options.scales.yAxes[0].ticks.max = ABAvg + 5;
+            myChart.config.options.scales.yAxes[0].ticks.min =  Math.round((MaxMax+2.5)/5.0)*5 ;         // Truncate Max to the nearest 5
+            myChart.config.options.scales.yAxes[0].ticks.max =  Math.round((MinMin+2.5)/5.0)*5 - 5 ;     // Truncate Min to the nearest 5
             myChart.update();
 
             document.getElementById('main').innerHTML = AllPrnt;           // Send the report to the browser page
