@@ -313,7 +313,7 @@
             // Create the Report Here
             //
 
-            var AllPrnt = "";
+            var AllPrnt = "", CellPrint="";
 
             AllPrnt += "Electric Powertrain Report " + ModDate + "<br />";    // Use 'new Date()' for current date
             AllPrnt += "VIN: " + hex2ascii(B33_902).substring(3) + "<br />";
@@ -373,7 +373,7 @@
             AllPrnt += "Charging Voltage Target: " + (PullInteger(A15_222029, 37, 2) / 5.0).toFixed(1) + "mV<br />";
             AllPrnt += "Current Limit during Plug-in Charging: -" + ((65536 - PullInteger(A15_222029, 54, 2)) / 10.0).toFixed(1) + "A<br /><br />";  // Make it negative
 
-            AllPrnt += "Maintenance Minder<br />";
+            AllPrnt += "<b>Maintenance Minder</b><br />";
             AllPrnt += "A - Oil & Filter        : " + PullInteger(A60_227060, 17, 2) + " days<br />";
             AllPrnt += "0 - General Inspection  : " + PullInteger(A60_227060, 29, 2) + " days<br />";
             AllPrnt += "1 - Rotate Tires        : " + PullInteger(A60_227060, 31, 2) + " days<br />";
@@ -386,10 +386,17 @@
 
             // Individual Cell Voltages
             // Bank A
+            CellPrint += "<br />" + "<b>A Bank Cell Voltages, Cells 01-84 (mV):</b>" + "<br />" +"<br />"+ "01 "
             var ACells = [];
             var Amin = 9999, Amax = 0, Aavg = 0;
             for (var n = 0; n < 84; n++) {
                 ACells.push(PullInteger(A01_222028, 30 + 2 * n, 2) / 5.0);
+              
+                CellPrint += ACells[n].toFixed(1) + " " ;
+                if ((n+1) % 10 == 0) {
+                    CellPrint += "<br />" + (n+2).toFixed(0) + " " ;
+                }
+
                 Amin = Math.min(Amin, ACells[n]);
                 Amax = Math.max(Amax, ACells[n]);
                 Aavg += ACells[n];
@@ -397,24 +404,31 @@
             Aavg = Aavg / 84.0;
 
             // Bank B
+            CellPrint += "<br />" + "<br />" + "<br />" + "<b>B Bank Cell Voltages, Cells 01-84 (mV):</b>" + "<br />" +"<br />"+ "01 "
             var BCells = [];
             var Bmin = 9999, Bmax = 0, Bavg = 0, iCell = [];
             for (var n = 0; n < 84; n++) {
                 BCells.push(PullInteger(A16_222028, 30 + 2 * n, 2) / 5.0);
                 iCell.push(n);                                         // Index for X-axis
+
+                CellPrint += BCells[n].toFixed(1) + " " ;
+                if ((n+1) % 10 == 0) {
+                    CellPrint += "<br />" + (n+2).toFixed(0) + " " ;
+                }
+
                 Bmin = Math.min(Bmin, BCells[n]);
                 Bmax = Math.max(Bmax, BCells[n]);
                 Bavg += BCells[n];
             }
             var MaxMax = 0, MinMin = 0 ;
             Bavg = Bavg / 84.0;
-            MaxMax = Math.max(Amax, Bmax);       // Find the max of A and B
-            MinMin = Math.min(Amin, Bmin);       // Find the min of A and B
+            MaxMax = Math.max(Amax, Bmax);
+            MinMin = Math.min(Amin, Bmin);
 
             // Show the Cell Statistics
             AllPrnt += '<table style="width:60%">';
             AllPrnt += "<tr><td><td></tr>";
-            AllPrnt += "<tr><td>Cell Statistics, mV:<td></tr>";
+            AllPrnt += "<tr><td><b>Cell Statistics, mV:</b><td></tr>";
             AllPrnt += "<tr><td></td><td>min</td><td>max</td><td>delta</td><td>avg</td></tr>";
             AllPrnt += "<tr><td>Bank A</td>" + "<td>" + Amin.toFixed(1) + "</td>" + "<td>" + Amax.toFixed(1) + "</td>" + "<td>" + (Amax - Amin).toFixed(2) + "</td>" + "<td>" + Aavg.toFixed(1) + "</td></tr>";
             AllPrnt += "<tr><td>Bank B</td>" + "<td>" + Bmin.toFixed(1) + "</td>" + "<td>" + Bmax.toFixed(1) + "</td>" + "<td>" + (Bmax - Bmin).toFixed(2) + "</td>" + "<td>" + Bavg.toFixed(1) + "</td></tr>";
@@ -471,11 +485,12 @@
             });
 
             //change the scale in accordance with the data
-            myChart.config.options.scales.yAxes[0].ticks.min =  Math.round((MaxMax+2.5)/5.0)*5 ;         // Truncate Max to the nearest 5
-            myChart.config.options.scales.yAxes[0].ticks.max =  Math.round((MinMin+2.5)/5.0)*5 - 5 ;     // Truncate Min to the nearest 5
+            myChart.config.options.scales.yAxes[0].ticks.min = Math.round((MaxMax+2.5)/5.0)*5 ;         // Truncate Max to the nearest 5
+            myChart.config.options.scales.yAxes[0].ticks.max = Math.round((MinMin+2.5)/5.0)*5 - 5 ;     // Truncate Min to the nearest 5
             myChart.update();
 
-            document.getElementById('main').innerHTML = AllPrnt;           // Send the report to the browser page
+            document.getElementById('main').innerHTML = AllPrnt;             // Send the report to the browser page
+            document.getElementById('cells').innerHTML = CellPrint;          // Send Cell Voltages to the browser page
 
         }  // End of function ReportGen()
 
@@ -491,6 +506,7 @@
     <input type="button" onclick='ReportGen()' value="Generate Report">
     <div id="main"></div>
     <canvas id="myChart" style="width:100%;max-width:800px"></canvas>
+    <div id="cells"></div>
 </body>
 
 </html>
