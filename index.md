@@ -70,6 +70,7 @@
         function ClarityCollect() {                              // Read data from Clarity, Save it in a log file
             console.log("Accessing OBD Data through ELM327")
             QueryELM();
+            ModDate = new Date() ;
             console.log("Done with it !")
         }
 
