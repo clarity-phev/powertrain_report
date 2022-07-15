@@ -5,7 +5,7 @@ The purpose of this code is to communicate with the Clarity through the OBD2 por
 
 This method is very convenient because it produces a 'written' record of the battery measurements every time it is used.  The log files produced are timestamped, and can be preserved and re-processed later.  The output reports may also be saved as .pdf documents.
 
-Any comments / contributiona are welcome.
+Any comments / contributions are welcome.
 
 Credits:
 This started as a collaborative effort on the Honda Clarity Forum here: https://www.insideevsforum.com/community/index.php?forums/clarity.53/
