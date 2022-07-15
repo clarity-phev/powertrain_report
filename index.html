@@ -372,8 +372,9 @@
             AllPrnt += "Input Voltage of Normal Charger: " + (PullInteger(A15_222021, 33, 2) / 10.0).toFixed(1) + "V<br />";
             AllPrnt += "Output Voltage of Normal Charger: " + (PullInteger(A15_222021, 37, 2) / 10.0).toFixed(1) + "V<br />";
             AllPrnt += "Charging Voltage Target: " + (PullInteger(A15_222029, 37, 2) / 5.0).toFixed(1) + "mV<br />";
-            AllPrnt += "Current Limit during Plug-in Charging: -" + ((65536 - PullInteger(A15_222029, 54, 2)) / 10.0).toFixed(1) + "A<br /><br />";  // Make it negative
+            AllPrnt += "Current Limit during Plug-in Charging: -" + ((65536 - PullInteger(A15_222029, 54, 2)) / 10.0).toFixed(1) + "A<br />";  // Make it negative
 
+            AllPrnt += "<p style='page-break-before: always'>"
             AllPrnt += "<b>Maintenance Minder</b><br />";
             AllPrnt += "A - Oil & Filter        : " + PullInteger(A60_227060, 17, 2) + " days<br />";
             AllPrnt += "0 - General Inspection  : " + PullInteger(A60_227060, 29, 2) + " days<br />";
@@ -387,6 +388,7 @@
 
             // Individual Cell Voltages
             // Bank A
+            CellPrint += "<p style='page-break-before: always'>"
             CellPrint += "<br />" + "<b>A Bank Cell Voltages, Cells 01-84 (mV):</b>" + "<br />" +"<br />"+ "01 "
             var ACells = [];
             var Amin = 9999, Amax = 0, Aavg = 0;
